@@ -55,9 +55,6 @@ public class Game extends ApplicationAdapter {
             totalPoints += brickGrid.checkCollisions(ball);
             if (ball.getBoundingBox().overlaps(player.getBoundingBox())) {
                 if (ball.getDirectiony() == -1) {
-                    ball.reverseDirectionY();
-                }
-                if (ball.getDirectiony() == 1) {
                     ball.setAngleFromPaddleHit(player.getBoundingBox());
                 }
             }

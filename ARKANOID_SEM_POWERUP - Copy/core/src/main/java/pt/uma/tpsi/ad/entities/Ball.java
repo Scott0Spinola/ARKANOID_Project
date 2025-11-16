@@ -21,7 +21,7 @@ public class Ball {
         animator = new Animator(batch, "fireball.png", 2, 2);
         this.directionY = 1;
         this.directionX = 1;
-        this.angle = 1;
+        this.angle = 2;
     }
 
     public void create() {
@@ -54,7 +54,28 @@ public class Ball {
     }
 
     public void setAngleFromPaddleHit(Rectangle paddle) {
+        float paddleThird = paddle.width / 3;
+        float paddleLeft = paddle.x;
+        float paddleMiddle = paddle.x + paddleThird;
+        float paddleRight = paddle.x + 2 * paddleThird;
 
+                int ballCenterX = posX + animator.getWidth() / 2;
+
+        if (ballCenterX >= paddleLeft && ballCenterX < paddleMiddle) {
+            // Hit left side
+            directionX = -1; // Go left
+            angle = 2; // Steeper angle
+        } else if (ballCenterX >= paddleMiddle && ballCenterX < paddleRight) {
+            // Hit middle
+            directionX = 0; // Go straight up
+            angle = 2;
+        } else {
+            // Hit right side
+            directionX = 1; // Go right
+            angle = 2; // Steeper angle
+        }
+        // The ball should always go up after hitting the paddle
+        directionY = 1;
     }
 
 
@@ -87,5 +108,10 @@ public class Ball {
     // Helper for grid collisions to invert vertical trajectory
     public void bounceVertical() {
         reverseDirectionY();
+    }
+
+    // Force the ball to move downward (used for brick collisions when simplifying response)
+    public void forceDown() {
+        this.directionY = -1;
     }
 }

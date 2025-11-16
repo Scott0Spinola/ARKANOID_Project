@@ -57,7 +57,7 @@ public class BrickGrid extends ArrayList<Brick> {
         }
     }
 
-    private Brick randomBrick(int x, int y) {
+    public Brick randomBrick(int x, int y) {
         double roll = random.nextDouble();
         if (roll < 0.7) {
             return new NormalBrick(batch, x, y);
@@ -121,33 +121,12 @@ public class BrickGrid extends ArrayList<Brick> {
         return 0;
     }
 
-    // Simple collision response to alter ball trajectory
-    private void handleCollision(Ball ball, Brick brick) {
-        Rectangle bb = brick.getBoundingBox();
-        Rectangle b = ball.getBoundingBox();
-        if (bb == null || b == null) return;
-
-        // Compute penetration on each axis using centers and half-extents
-        float ballCenterX = b.x + b.width / 2f;
-        float ballCenterY = b.y + b.height / 2f;
-        float brickCenterX = bb.x + bb.width / 2f;
-        float brickCenterY = bb.y + bb.height / 2f;
-
-        float dx = ballCenterX - brickCenterX;
-        float dy = ballCenterY - brickCenterY;
-        float px = (bb.width / 2f + b.width / 2f) - Math.abs(dx);
-        float py = (bb.height / 2f + b.height / 2f) - Math.abs(dy);
-
-        if (px < py) {
-            // Side hit: invert horizontal
-            ball.reverseDirectionX();
-        } else if (py < px) {
-            // Top/bottom hit: invert vertical
-            ball.bounceVertical();
-        } else {
-            // Corner: invert both
-            ball.reverseDirectionX();
-            ball.bounceVertical();
+    // Simple collision response: when ball hits a brick, force it to go down
+    public void handleCollision(Ball ball, Brick brick) {
+        // We assume checkCollisions already confirmed overlap.
+        // Just force the ball to move downward after the hit.
+        if (ball != null) {
+            ball.forceDown();
         }
     }
 }
